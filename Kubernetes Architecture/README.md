@@ -77,7 +77,11 @@ These run on **each worker node** and are responsible for running containers.
 6. The **kube-proxy** sets up the networking so your app is accessible.
 
 ---
+## 📊 Kubernetes Architecture Diagram
 
+![Kubernetes Architecture Diagram](./Kubernetes-Architecture.png)
+
+<sub>Source: [cloudairy.com](https://cloudairy.com)</sub>
 
 ## 📚 References
 
