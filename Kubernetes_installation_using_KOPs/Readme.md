@@ -63,15 +63,55 @@ These tools are not suitable for production but great for learning:
 ## 🔧 KOPS Practical: Cluster Creation Steps
 
 ### 1. Install Tools
-
-```bash
+```
 sudo apt update && sudo apt install -y python3 python3-pip unzip
-# Install AWS CLI
+```
+### Install AWS CLI
+```
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip && sudo ./aws/install
-# Install kubectl
+```
+### Install kubectl
+```
 curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 chmod +x kubectl && sudo mv kubectl /usr/local/bin/
-# Install kops
+```
+### Install kops
+```
 curl -Lo kops https://github.com/kubernetes/kops/releases/latest/download/kops-linux-amd64
 chmod +x kops && sudo mv kops /usr/local/bin/
+```
+
+### 2. Configure AWS CLI
+```
+aws configure
+```
+## 3. Create an S3 Bucket for KOPS state storage
+```
+aws s3api create-bucket \
+  --bucket kops-storage \
+  --region eu-north-1 \
+  --create-bucket-configuration LocationConstraint=eu-north-1
+```
+### 4. Create a Kubernetes Cluster
+```
+export KOPS_CLUSTER_NAME=8scluster.k8s.local
+export KOPS_STATE_STORE=s3://kops-storage
+kops create cluster \
+  --name=$KOPS_CLUSTER_NAME \
+  --state=$KOPS_STATE_STORE \
+  --zones=eu-north-1a \
+  --node-count=1 \
+  --node-size=t3.micro \
+  --control-plane-size=t3.micro \
+  --control-plane-volume-size=8 \
+  --node-volume-size=8 \
+  --yes
+```
+## 🧪 Since this is not a production environment, we're using .k8s.local as a domain. In real-world setups, you'd use a public domain managed via Route 53.
+## ✅ Outcomes
+- **Learned how Kubernetes clusters are managed**
+
+- **Installed required tools and configured AWS**
+
+- **Created a production-style Kubernetes cluster using kops**
